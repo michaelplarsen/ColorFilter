@@ -91,3 +91,79 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+------
+
+
+
+import React, { useState } from 'react';
+import { ChakraProvider, Box, Button, ButtonGroup, extendTheme } from '@chakra-ui/react';
+import SwipeableViews from 'react-swipeable-views';
+
+const theme = extendTheme({
+  styles: {
+    global: {
+      body: {
+        margin: 0,
+        padding: 0,
+        boxSizing: 'border-box',
+        fontFamily: 'sans-serif',
+      },
+    },
+  },
+});
+
+const MainPage = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const buttonSets = [
+    ['Button 1', 'Button 2', 'Button 3', 'Button 4', 'Button 5', 'Button 6', 'Button 7', 'Button 8'],
+    ['Button 9', 'Button 10', 'Button 11', 'Button 12', 'Button 13', 'Button 14', 'Button 15', 'Button 16'],
+    ['Button 17', 'Button 18', 'Button 19', 'Button 20', 'Button 21', 'Button 22', 'Button 23', 'Button 24'],
+  ];
+
+  const handleButtonClick = (apiEndpoint) => {
+    // Call the API endpoint here
+    console.log(`Calling API: ${apiEndpoint}`);
+  };
+
+  const handleSwipeChange = (index) => {
+    setActiveIndex(index);
+  };
+
+  const getBackgroundColor = (index) => {
+    const colors = ['red.200', 'blue.200', 'green.200'];
+    return colors[index % colors.length];
+  };
+
+  return (
+    <ChakraProvider theme={theme}>
+      <Box display="flex" alignItems="center" justifyContent="center" height="100vh">
+        <SwipeableViews index={activeIndex} onChangeIndex={handleSwipeChange} enableMouseEvents>
+          {buttonSets.map((buttons, index) => (
+            <Box
+              key={index}
+              flex="1"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              backgroundColor={getBackgroundColor(index)}
+            >
+              <ButtonGroup spacing={4} flexDirection="column">
+                {buttons.map((button, buttonIndex) => (
+                  <Button
+                    key={buttonIndex}
+                    onClick={() => handleButtonClick(`api-endpoint-${index * 8 + buttonIndex + 1}`)}
+                  >
+                    {button}
+                  </Button>
+                ))}
+              </ButtonGroup>
+            </Box>
+          ))}
+        </SwipeableViews>
+      </Box>
+    </ChakraProvider>
+  );
+};
+
+export default MainPage;
